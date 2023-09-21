@@ -9,7 +9,7 @@ const PORT = process.env.port;
 //  STEP 4 import mongoose.config
 require("./config/mongoose.config");
 
-// STEP 2 CONFIGURE EXPRESS
+// STEP 2 CONFIGURE EXPRESS (MIDDLEWARES)
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
