@@ -1,5 +1,5 @@
 // import model
-const Hotel = require("../models/hotel.model");
+const Hotel = require("../models/hotel.model.js");
 
 // Server Test:
 

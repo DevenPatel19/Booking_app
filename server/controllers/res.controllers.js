@@ -1,5 +1,5 @@
 // import model
-const Res = require("../models/res.model");
+const Res = require("../models/res.model.js");
 
 // Server Test:
 
@@ -10,12 +10,12 @@ module,
 
 // 2 export all functions with placeholder
 
-// Create One
-module.exports.createRes = (req, res) => {
-    Res.create(req.body)
-        .then((newRes) => res.json(newRes))
-        .catch((err) => res.status(400).json(err));
-};
+// // Create One
+// module.exports.createRes = (req, res) => {
+//     Res.create(req.body)
+//         .then((newRes) => res.json(newRes))
+//         .catch((err) => res.status(400).json(err));
+// };
 
 // Read All
 module.exports.allRes = (req, res) => {

@@ -24,11 +24,16 @@ const ResSchema = new mongoose.Schema(
         email: {
             type: String,
             required: [true, "What is it?!"],
-            minlength: [2, "Give me more than 2 letters please."],
+            minlength: [2, "Must be 2+ characters in length."],
         },
-        userRole: {
+        password: {
             type: String,
-            required: [true, "Select a role."],
+            required: true,
+            minlength: [2, "Must be 2+ characters in length."],
+        },
+        isAdmin: {
+            type: Boolean,
+            default: false,
         },
     },
     { timestamps: true }

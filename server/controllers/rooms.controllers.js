@@ -1,5 +1,5 @@
 // import model
-const Rooms = require("../models/rooms.model");
+const Rooms = require("../models/rooms.model.js");
 
 // Server Test:
 
