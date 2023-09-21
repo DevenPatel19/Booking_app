@@ -17,8 +17,8 @@ app.use(express.urlencoded({ extended: true }));
 // STEP 5 ROUTES
 require("./routes/res.routes")(app);
 require("./routes/hotel.routes")(app);
-require("./routes/res.routes")(app);
-require("./routes/res.routes")(app);
+// require("./routes/rooms.routes")(app);
+// require("./routes/auth.routes")(app);
 // routes(app); chose single line method
 
 // STEP 3 Listen to Port
