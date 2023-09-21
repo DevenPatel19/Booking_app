@@ -1,5 +1,6 @@
 const Res = require("../models/res.model.js");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 // Create One
 module.exports.createRes = (req, res) => {
@@ -34,32 +35,34 @@ module.exports.createRes = (req, res) => {
 };
 
 // Login function
-module.exports.login = (req, res) => {
-    const { username, password } = req.body;
+module.exports.login = async (req, res) => {
+    const { username, password: inputPassword } = req.body; // Rename 'password' to 'inputPassword'
 
-    // Find the user by username in the database
-    Res.findOne({ username }, (err, user) => {
-        if (err) {
-            return res.status(500).json({ error: "Internal Server Error" });
-        }
+    try {
+        const user = await Res.findOne({ username }).exec();
 
         if (!user) {
-            return res.status(404).json({ error: "User not found" });
+            return res.status(404).json({ error: "Incorrect Credentials" });
         }
 
-        // Compare the provided password with the hashed password in the database
-        bcrypt.compare(password, user.password, (err, isMatch) => {
-            if (err) {
-                return res.status(500).json({ error: "Internal Server Error" });
-            }
+        const isMatch = await bcrypt.compare(inputPassword, user.password); // Use 'inputPassword' here
 
-            if (!isMatch) {
-                return res.status(401).json({ error: "Incorrect password" });
-            }
+        if (!isMatch) {
+            return res.status(401).json({ error: "Incorrect Credentials" });
+        }
 
-            // Password is correct; you can create a session or token for authentication
-            // For simplicity, here we're just sending a success message
-            return res.json({ message: "Login successful" });
-        });
-    });
+        const token = jwt.sign(
+            { id: user._id, isAdmin: user.isAdmin },
+            "123456"
+        );
+
+        // Password is correct; extract user details without password and isAdmin
+        const { password, isAdmin, ...otherDetails } = user._doc;
+
+        // Respond with user details (excluding password and isAdmin)
+        return res.status(200).json(otherDetails);
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({ error: "Internal Server Error" });
+    }
 };

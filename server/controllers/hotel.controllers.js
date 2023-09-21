@@ -33,11 +33,17 @@ module.exports.oneHotel = (req, hotel) => {
 
 // Update One
 module.exports.updateHotel = (req, hotel) => {
-    Hotel.findOneAndUpdate({ _id: req.params.id }, req.body, {
-        new: true,
-        runValidators: true, // Enabling validation step
-    })
-        .then((updatedHotel) => hotel.json(updatedHotel))
+    Hotel.findOneAndUpdate(
+        { _id: req.params.id }, // Find the document by ID
+        { $set: req.body }, // Update the document with the request body
+        { new: true, runValidators: true } // Options: return the updated document and run validators
+    )
+        .then((updatedHotel) => {
+            if (!updatedHotel) {
+                return hotel.status(404).json({ message: "Hotel not found" });
+            }
+            hotel.json(updatedHotel);
+        })
         .catch((err) => hotel.status(400).json(err));
 };
 

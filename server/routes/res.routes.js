@@ -12,7 +12,8 @@ module.exports = (app) => {
     app.get("/api/ress/:id", ResController.oneRes);
 
     // Post Requests
-    app.post("/api/ress/auth/register", AuthController.createRes);
+    app.post("/register", AuthController.createRes);
+    app.post("/login", AuthController.login);
 
     // 	Put Requests
     // ? Put vs Patch?

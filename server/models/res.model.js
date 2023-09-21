@@ -26,6 +26,11 @@ const ResSchema = new mongoose.Schema(
             required: [true, "What is it?!"],
             minlength: [2, "Must be 2+ characters in length."],
         },
+        userName: {
+            type: String,
+            required: [true, "What is it?!"],
+            minlength: [2, "Must be 2+ characters in length."],
+        },
         password: {
             type: String,
             required: true,
