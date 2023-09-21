@@ -1,6 +1,7 @@
 // Import the controller
 const ResController = require("../controllers/res.controllers");
 const AuthController = require("../controllers/auth.controllers");
+const { verifyToken } = require("../utils/verifyToken");
 
 module.exports = (app) => {
     // Get requests
@@ -22,6 +23,10 @@ module.exports = (app) => {
 
     // Delete Requests
     app.delete("/api/ress/:id", ResController.deleteRes);
+
+    app.get("/checkauth", verifyToken, (req, res, next) => {
+        res.send("Hello user, you are logged in");
+    });
 };
 
 // module.exports = router;
