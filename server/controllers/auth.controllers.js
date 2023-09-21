@@ -1,6 +1,7 @@
 // Import necessary modules and models
 const Res = require("../models/res.model.js"); // Replace with your actual model path
 const bcrypt = require("bcrypt");
+const { createError } = require("../utils/error");
 const jwt = require("jsonwebtoken");
 
 // User Registration

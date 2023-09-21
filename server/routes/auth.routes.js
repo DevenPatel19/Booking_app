@@ -1,8 +1,8 @@
-const express = require("express");
+const Res = require("../models/res.model.js"); // Import the model
 const bcrypt = require("bcrypt");
+const express = require("express");
 const jwt = require("jsonwebtoken");
 
-const Res = require("../models/res.model.js"); // Import the model
 const ResController = require("../controllers/res.controllers");
 const AuthController = require("../controllers/auth.controllers");
 
@@ -38,7 +38,7 @@ module.exports = (app) => {
     });
 
     // Login
-    router.post("/login", (req, res) => {
+    router.post("/login", (req, res, next) => {
         const { username, password } = req.body;
 
         Res.findOne({ username }, (err, user) => {
