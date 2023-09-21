@@ -3,6 +3,7 @@ const HotelController = require("../controllers/hotel.controllers");
 
 module.exports = (app) => {
     // Get requests
+    app.get("/api/test/hotels", HotelController.apiTest);
     // Get all route
     app.get("/api/hotels", HotelController.allHotel);
 
