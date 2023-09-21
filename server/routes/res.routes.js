@@ -24,6 +24,4 @@ module.exports = (app) => {
     app.delete("/api/ress/:id", ResController.deleteRes);
 };
 
-// 3 Import routes to our server!
-
 // module.exports = router;

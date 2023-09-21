@@ -1,8 +1,9 @@
-const Res = require("../models/res.model.js");
+// Import necessary modules and models
+const Res = require("../models/res.model.js"); // Replace with your actual model path
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
-// Create One
+// User Registration
 module.exports.createRes = (req, res) => {
     // Extract the password from the request body
     const { password, ...otherData } = req.body;
@@ -29,39 +30,48 @@ module.exports.createRes = (req, res) => {
             // Create the resource with the hashed password
             Res.create(dataWithHashedPassword)
                 .then((newRes) => res.json(newRes))
-                .catch((err) => res.status(400).json(err));
+                .catch((err) => res.status(400).json({ error: err.message }));
         });
     });
 };
 
-// Login function
+// User Login
 module.exports.login = async (req, res) => {
     const { username, password: inputPassword } = req.body; // Rename 'password' to 'inputPassword'
 
     try {
+        // Find the user by username in the database
         const user = await Res.findOne({ username }).exec();
 
         if (!user) {
+            // If the user does not exist, return a 404 error
             return res.status(404).json({ error: "Incorrect Credentials" });
         }
 
-        const isMatch = await bcrypt.compare(inputPassword, user.password); // Use 'inputPassword' here
+        // Compare the input password with the hashed password stored in the database
+        const isMatch = await bcrypt.compare(inputPassword, user.password);
 
         if (!isMatch) {
+            // If the passwords do not match, return a 401 error
             return res.status(401).json({ error: "Incorrect Credentials" });
         }
 
+        // Generate a JWT token for authentication
         const token = jwt.sign(
             { id: user._id, isAdmin: user.isAdmin },
-            "123456"
+            process.env.JWT
         );
 
-        // Password is correct; extract user details without password and isAdmin
+        // Extract user details without password and isAdmin
         const { password, isAdmin, ...otherDetails } = user._doc;
 
-        // Respond with user details (excluding password and isAdmin)
-        return res.status(200).json(otherDetails);
+        // Respond with user details (excluding password and isAdmin) and set the JWT token as an HTTP-only cookie
+        return res
+            .cookie("access_token", token, { httpOnly: true, secure: true }) // Secure flag for HTTPS
+            .status(200)
+            .json(otherDetails);
     } catch (err) {
+        // Handle internal server errors and log them
         console.error(err);
         return res.status(500).json({ error: "Internal Server Error" });
     }
