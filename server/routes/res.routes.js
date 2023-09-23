@@ -1,8 +1,7 @@
 // Import the controller
 const ResController = require("../controllers/res.controllers");
 const AuthController = require("../controllers/auth.controllers");
-const { verifyToken } = require("../utils/verifyToken");
-const { createError } = require("../utils/error");
+const { verifyToken, verifyUser } = require("../utils/verifyToken");
 
 module.exports = (app) => {
     // Get requests
@@ -14,8 +13,8 @@ module.exports = (app) => {
     app.get("/api/ress/:id", ResController.oneRes);
 
     // Post Requests
-    app.post("/register", AuthController.createRes);
-    app.post("/login", AuthController.login);
+    app.post("/register", verifyUser, AuthController.createRes);
+    app.post("/login", verifyUser, AuthController.login);
 
     // 	Put Requests
     // ? Put vs Patch?

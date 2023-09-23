@@ -1,11 +1,11 @@
 // STEP 1 IMPORT DEPENDENCIES
 const express = require("express");
+const cookieParser = require("cookie-parser");
 const app = express();
 const cors = require("cors");
-const cookieParser = require("cookie-parser");
 require("dotenv").config();
 
-const PORT = process.env.port; // Fix the typo, it should be 'PORT' instead of 'port'
+const PORT = process.env.PORT; // Fix the typo, it should be 'PORT' instead of 'port'
 
 //  STEP 4 import mongoose.config
 require("./config/mongoose.config");
@@ -15,6 +15,11 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+app.use((err, req, res, next) => {
+    const errorStatus = err.status || 500;
+    const errorMessage = err.message || 500;
+    return res.status(500).json("Hello error from handler");
+});
 
 // STEP 5 ROUTES
 require("./routes/res.routes")(app);

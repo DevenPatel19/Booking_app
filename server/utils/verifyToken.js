@@ -1,24 +1,33 @@
 // Import the createError function
-const { createError } = require("../utils/error");
 const jwt = require("jsonwebtoken");
+const { createError } = require("../utils/error");
 
 // Middleware to verify the JWT token
 const verifyToken = (req, res, next) => {
-    const token = req.cookies.access_token;
-    console.log("Token:", token); // Log the token
+    try {
+        // Get the token from the cookies
+        const token = req.cookies.access_token;
+        console.log("Token:", token);
 
-    if (!token) {
-        return next(createError(401, "You are not authenticated!"));
+        // Check if the token is missing
+        if (!token) {
+            return next(createError(401, "You are not authenticated!"));
+        }
+
+        // Verify the token with the JWT secret
+        jwt.verify(token, process.env.JWT, (err, user) => {
+            if (err) {
+                return next(createError(403, "Token is not valid!"));
+            }
+            // Attach the user object to the request for later use
+            req.user = user;
+            next();
+        });
+    } catch (error) {
+        // Handle unexpected errors
+        next(createError(500, "Internal Server Error"));
     }
-
-    jwt.verify(token, process.env.JWT, (err, user) => {
-        console.log("Decoded User:", user);
-        if (err) return next(createError(403, "Token is not valid!"));
-        req.user = user;
-        next();
-    });
 };
-
 // Middleware to verify user
 const verifyUser = (req, res, next) => {
     if (req.user.id === req.params.id || req.user.isAdmin) {
